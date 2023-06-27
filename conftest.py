@@ -4,6 +4,7 @@ import pytest
 
 from django.conf import settings
 from django.utils import timezone
+
 from news.models import News, Comment
 
 
@@ -15,6 +16,17 @@ def author(django_user_model):
 @pytest.fixture
 def author_client(author, client):
     client.force_login(author)
+    return client
+
+
+@pytest.fixture
+def reader(django_user_model):
+    return django_user_model.objects.create(username='Читатель')
+
+
+@pytest.fixture
+def reader_client(reader, client):
+    client.force_login(reader)
     return client
 
 
@@ -71,3 +83,13 @@ def all_news():
         ]
     News.objects.bulk_create(all_news)
     return len(all_news)
+
+
+@pytest.fixture
+def form_data():
+    return {'text': 'Текст'}
+
+
+@pytest.fixture
+def new_form_data():
+    return {'text': 'Новый текст'}
